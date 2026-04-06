@@ -22,7 +22,7 @@ export function useChat(mode) {
     setError(null);
 
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch(import.meta.env.VITE_WORKER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -33,13 +33,19 @@ export function useChat(mode) {
         }),
       });
       const data = await res.json();
+      if (!res.ok || data.error) {
+        const msg = data.error?.message || `API error ${res.status}`;
+        setError(msg);
+        setMessages((m) => ({ ...m, [mode.id]: currentMessages }));
+        return;
+      }
       const reply = data.content?.find((b) => b.type === "text")?.text || "No response.";
       setMessages((m) => ({
         ...m,
         [mode.id]: [...updatedMsgs, { role: "assistant", content: reply }],
       }));
-    } catch {
-      setError("Request failed. Try again.");
+    } catch (e) {
+      setError(e.message || "Request failed. Try again.");
     } finally {
       setLoading(false);
     }
