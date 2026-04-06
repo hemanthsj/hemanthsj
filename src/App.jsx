@@ -150,7 +150,7 @@ export default function App() {
                 : "Give me a topic, rough notes, or an angle — I'll draft a practitioner post your peers will actually read."}
             </div>
             <div style={styles.suggestions}>
-              {mode.id === "career"
+              {(mode.id === "career"
                 ? [
                     "How do I position my platform ownership as a strategic asset?",
                     "How long is my moat defensible given current AI trends?",
@@ -161,8 +161,7 @@ export default function App() {
                     "What insurtech engineers get wrong about AI adoption",
                     "The boring infrastructure that makes AI comms possible",
                   ]
-              }
-              .map((s) => (
+              ).map((s) => (
                 <button
                   key={s}
                   style={styles.suggBtn}
